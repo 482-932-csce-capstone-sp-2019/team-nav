@@ -1,5 +1,6 @@
 ﻿
 using Esri.ArcGISRuntime.Mapping;
+using Esri.ArcGISRuntime;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -25,7 +26,7 @@ namespace ArcGISAppDemo
             }
         }
 
-        private readonly Dictionary<string, Basemap> _basemapOptions = new Dictionary<string, Basemap>()
+        public  Dictionary<string, Basemap> _basemapOptions = new Dictionary<string, Basemap>()
         {
             {"Streets (Raster)", Basemap.CreateStreets()},
             {"Streets (Vector)", Basemap.CreateStreetsVector()},
@@ -63,8 +64,10 @@ namespace ArcGISAppDemo
         private void Initialize()
         {
             // Create new Map with basemap
-            Map myMap = new Map(Basemap.CreateTopographic());
+            var bmap = Basemap.CreateTopographic();
 
+            Map myMap = new Map(bmap);
+            myMap.InitialViewpoint = new Viewpoint(30.6158, -96.3368, 1000);
             // Assign the map to the MapView
             MyMapView.Map = myMap;
         }
