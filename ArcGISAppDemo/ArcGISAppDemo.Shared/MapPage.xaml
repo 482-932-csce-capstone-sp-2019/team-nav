@@ -11,6 +11,5 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
         <esriUI:MapView x:Name="MyMapView" />
-        <Button x:Name="changeBasemapButton" Text="Change Basemap" Clicked="OnChangeBasemapButtonClicked" Grid.Row="1"/>
     </Grid>
 </ContentPage>

@@ -7,39 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using Xamarin.Forms;
-
+using Esri.ArcGISRuntime.Data;
+using Esri.ArcGISRuntime.Location;
 
 namespace ArcGISAppDemo
 {
     public partial class ChangeBasemap : ContentPage
     {
-        public string getJson(string uri)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream stream = response.GetResponseStream())
-            using (StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
-        }
-
-        public  Dictionary<string, Basemap> _basemapOptions = new Dictionary<string, Basemap>()
-        {
-            {"Streets (Raster)", Basemap.CreateStreets()},
-            {"Streets (Vector)", Basemap.CreateStreetsVector()},
-            {"Streets - Night (Vector)", Basemap.CreateStreetsNightVector()},
-            {"Imagery (Raster)", Basemap.CreateImagery()},
-            {"Imagery with Labels (Raster)", Basemap.CreateImageryWithLabels()},
-            {"Imagery with Labels (Vector)", Basemap.CreateImageryWithLabelsVector()},
-            {"Dark Gray Canvas (Vector)", Basemap.CreateDarkGrayCanvasVector()},
-            {"Light Gray Canvas (Raster)", Basemap.CreateLightGrayCanvas()},
-            {"Light Gray Canvas (Vector)", Basemap.CreateLightGrayCanvasVector()},
-            {"Navigation (Vector)", Basemap.CreateNavigationVector()},
-            {"OpenStreetMap (Raster)", Basemap.CreateOpenStreetMap()}
-        };
+        
 
         public ChangeBasemap()
         {
@@ -51,25 +26,27 @@ namespace ArcGISAppDemo
             Initialize();
         }
 
-        private async void OnChangeBasemapButtonClicked(object sender, EventArgs e)
-        {
-            // Show sheet and get title from the selection
-            var selectedBasemap =
-                await DisplayActionSheet("Select basemap", "Cancel", null, _basemapOptions.Keys.ToArray());
-
-            // Retrieve the basemap from the dictionary
-            MyMapView.Map.Basemap = _basemapOptions[selectedBasemap];
-        }
+        
 
         private void Initialize()
         {
             // Create new Map with basemap
             var bmap = Basemap.CreateTopographic();
+       
 
+
+            var uri = new Uri("http://gis.tamu.edu/arcgis/rest/services/FCOR/ADA_120717/MapServer");
+            var layer = new ArcGISMapImageLayer(uri);
+            bmap.BaseLayers.Add(layer);
             Map myMap = new Map(bmap);
-            myMap.InitialViewpoint = new Viewpoint(30.6158, -96.3368, 1000);
-            // Assign the map to the MapView
+            myMap.OperationalLayers.Add(new ArcGISMapImageLayer(new Uri("http://gis.tamu.edu/arcgis/rest/services/Routing/20190213/MapServer")));
+            //myMap.OperationalLayers.Add(layer);
+
+            //sets initial location
+            myMap.InitialViewpoint = new Viewpoint(30.6158, -96.3368, 2000);
+            MyMapView.LocationDisplay.IsEnabled = true;
             MyMapView.Map = myMap;
+           
         }
     }
 }
