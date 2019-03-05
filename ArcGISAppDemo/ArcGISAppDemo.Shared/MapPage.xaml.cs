@@ -10,12 +10,7 @@ namespace ArcGISAppDemo
 {
     public partial class ChangeBasemap : ContentPage
     {
-        private string[] _navigationTypes = {
-            "On",
-            "Re-Center",
-            "Navigation",
-            "Compass"
-        };
+        private SystemLocationDataSource slds;
         public ChangeBasemap()
         {
             InitializeComponent();
@@ -27,7 +22,7 @@ namespace ArcGISAppDemo
         }
 
        
-        private  void Initialize()
+        private async void Initialize()
         {
             // Create new Map with basemap
             var bmap = Basemap.CreateTopographic();
@@ -40,7 +35,10 @@ namespace ArcGISAppDemo
             Map myMap = new Map(bmap);
             myMap.OperationalLayers.Add(new ArcGISMapImageLayer(new Uri("http://gis.tamu.edu/arcgis/rest/services/Routing/20190213/MapServer")));
 
-
+            //set location
+            slds = new SystemLocationDataSource();
+            await slds.StartAsync();
+            slds.LocationChanged += Slds_LocationChanged;
 
 
            // Starts location display with auto pan mode set to Compass Navigation
@@ -52,8 +50,22 @@ namespace ArcGISAppDemo
 
         }
 
-      
+        private  void Slds_LocationChanged(object sender, Location e)
+        {
 
+            if (e.Position == null)
+            {
+                return;
+            }
 
+            // Unsubscribe from further events; only want to zoom to location once.
+            slds.LocationChanged -= Slds_LocationChanged;
+            label.Text = ("Lat: "+ e.Position.X + "\tLong: " + e.Position.Y);
+
+            Device.BeginInvokeOnMainThread(() =>
+            {
+                MyMapView.SetViewpoint(new Viewpoint(e.Position, 100000));
+            });
+        }
     }
 }
