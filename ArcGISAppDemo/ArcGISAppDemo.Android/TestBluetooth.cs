@@ -54,7 +54,7 @@ namespace ArcGISAppDemo
         public async void SendMsg()
         {
             var buffer = Encoding.ASCII.GetBytes("a");
-            await _socket.OutputStream.WriteAsync(buffer, 0, buffer.Length)
+            await _socket.OutputStream.WriteAsync(buffer, 0, buffer.Length);
         }
     }
 }
