@@ -14,7 +14,7 @@
             <ColumnDefinition Width="*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        <Label x:Name="label" Text="Lat Long"/>
+        <Label x:Name="label" Text="Lat Long" Grid.ColumnSpan="2"/>
         <esriUI:MapView x:Name="MyMapView" Grid.Row="1" Grid.ColumnSpan="2" />
 
     </Grid>

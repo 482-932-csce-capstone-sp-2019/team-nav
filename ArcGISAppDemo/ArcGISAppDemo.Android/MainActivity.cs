@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Android;
 using Android.Widget;
 using Android.Runtime;
+using Android.Bluetooth;
 
 namespace ArcGISAppDemo
 {
@@ -15,6 +16,7 @@ namespace ArcGISAppDemo
     {
         protected async override void OnCreate(Bundle bundle)
         {
+            
 
             await TryToGetPermissions();
             base.OnCreate(bundle);
@@ -27,7 +29,7 @@ namespace ArcGISAppDemo
         {
             if((int)Build.VERSION.SdkInt >= 23)
             {
-                await GetPermissionsAsync();
+                GetPermissions();
                 return;
             }
         }
@@ -35,12 +37,14 @@ namespace ArcGISAppDemo
         readonly string[] PermissonsGroupLocation =
         {
             Manifest.Permission.AccessCoarseLocation,
-            Manifest.Permission.AccessFineLocation
+            Manifest.Permission.AccessFineLocation,
+            Manifest.Permission.Bluetooth,
+            Manifest.Permission.BluetoothAdmin
         };
-        async Task GetPermissionsAsync()
+        void GetPermissions()
         {
             const string permission = Manifest.Permission.AccessFineLocation;
-            if(CheckSelfPermission(permission) == (int)Android.Content.PM.Permission.Granted)
+            if (CheckSelfPermission(permission) == (int)Android.Content.PM.Permission.Granted)
             {
                 Toast.MakeText(this, "Special Permissions granted", ToastLength.Short).Show();
                 return;

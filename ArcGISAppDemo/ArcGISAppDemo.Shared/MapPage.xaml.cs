@@ -6,6 +6,8 @@ using System;
 using System.Linq;
 using Xamarin.Forms;
 
+
+
 namespace ArcGISAppDemo
 {
     public partial class ChangeBasemap : ContentPage
@@ -37,6 +39,7 @@ namespace ArcGISAppDemo
 
             //set location
             slds = new SystemLocationDataSource();
+            
             await slds.StartAsync();
             slds.LocationChanged += Slds_LocationChanged;
 
@@ -59,13 +62,10 @@ namespace ArcGISAppDemo
             }
 
             // Unsubscribe from further events; only want to zoom to location once.
-            slds.LocationChanged -= Slds_LocationChanged;
+           // slds.LocationChanged -= Slds_LocationChanged;
             label.Text = ("Lat: "+ e.Position.X + "\tLong: " + e.Position.Y);
 
-            Device.BeginInvokeOnMainThread(() =>
-            {
-                MyMapView.SetViewpoint(new Viewpoint(e.Position, 100000));
-            });
+           
         }
     }
 }
